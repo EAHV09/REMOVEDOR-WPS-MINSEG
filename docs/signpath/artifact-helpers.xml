@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <powershell-file path="AppLockerHost.ps1"><authenticode-sign /></powershell-file>
+    <powershell-file path="BuildPolicy.ps1"><authenticode-sign /></powershell-file>
+  </zip-file>
+</artifact-configuration>

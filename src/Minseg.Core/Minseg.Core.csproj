@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'"><DebugType>none</DebugType><DebugSymbols>false</DebugSymbols></PropertyGroup>
+  <PropertyGroup><TargetFramework>net10.0-windows</TargetFramework></PropertyGroup>
+  <ItemGroup><EmbeddedResource Include="AllowAll.xml" /><EmbeddedResource Include="BuildPolicy.ps1" /><EmbeddedResource Include="AppLockerHost.ps1" /></ItemGroup>
+</Project>

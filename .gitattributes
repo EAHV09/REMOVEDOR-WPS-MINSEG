@@ -1,0 +1,7 @@
+* text=auto eol=lf
+src/** -text
+*.png binary
+*.ico binary
+*.ttf binary
+*.exe binary
+*.zip binary

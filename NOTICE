@@ -1,0 +1,17 @@
+MINSEG Control
+Copyright 2026, colaboradores de MINSEG Control.
+
+El código original de este proyecto se distribuye bajo Apache License 2.0.
+No incluye garantía ni certificación institucional.
+
+Los logos MINSEG Panamá, MINSEG.gob.pa y CIBERCOM fueron suministrados
+para esta aplicación. Sus marcas y elementos gráficos conservan sus
+derechos originales y no quedan licenciados como código Apache 2.0.
+Su inclusión no acredita la aprobación oficial de esta compilación.
+
+Barlow y Source Sans 3: SIL Open Font License 1.1.
+.NET y WindowsDesktop: avisos y licencias de Microsoft incluidos en
+src/Minseg.App/Licenses y en la sección Licencia y ayuda del programa.
+
+WPS Office, AnyDesk, Microsoft y Bitdefender son marcas de sus titulares.
+No hay afiliación ni autorización comercial implícita de esos proveedores.

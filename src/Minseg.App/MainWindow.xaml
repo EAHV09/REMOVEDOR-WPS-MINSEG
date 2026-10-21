@@ -1,0 +1,140 @@
+<Window x:Class="Minseg.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Minseg.App" Title="REMOVEDOR DEL WPS MINSEG" Style="{StaticResource AppWindow}" Icon="Assets/app.ico" Width="1120" Height="720" MinWidth="960" MinHeight="620" WindowStartupLocation="CenterScreen" Loaded="WindowLoaded" Closing="WindowClosing" UseLayoutRounding="True">
+ <DockPanel>
+  <Border DockPanel.Dock="Top" Background="{DynamicResource Header}" Padding="22,8">
+   <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="70"/><RowDefinition Height="28"/></Grid.RowDefinitions>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+     <Image Source="Assets/minseg-seal.png" Width="70" Height="70" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Escudo MINSEG Panamá"/>
+     <Image Source="Assets/minseg-wordmark.png" Width="235" Height="47" Margin="16,0,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="MINSEG punto gob punto pa"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+     <Image Source="Assets/cibercom.png" Width="68" Height="68" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Logo CIBERCOM"/>
+     <StackPanel VerticalAlignment="Center" Margin="12,0,0,0"><TextBlock Text="CIBERCOM" FontFamily="{StaticResource TitleFont}" FontSize="30" Foreground="White"/><TextBlock Text="MINSEG Panamá" Foreground="White" FontSize="14"/></StackPanel>
+    </StackPanel>
+    <TextBlock Grid.Row="1" Text="REMOVEDOR DEL WPS MINSEG" Foreground="White" FontFamily="{StaticResource TitleFont}" FontSize="24" HorizontalAlignment="Center"/>
+   </Grid>
+  </Border>
+  <Border DockPanel.Dock="Bottom" Background="{DynamicResource Canvas}" Padding="18,6" BorderBrush="{DynamicResource Edge}" BorderThickness="0,1,0,0">
+   <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <StackPanel Margin="0,0,12,0" VerticalAlignment="Center">
+     <TextBlock x:Name="StatusLabel" Text="{Binding Status}" Foreground="{DynamicResource Subtle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding Status}" FontSize="13" AutomationProperties.LiveSetting="Polite"/>
+     <ProgressBar Height="3" IsIndeterminate="{Binding Busy}" Margin="0,4,0,0"/>
+    </StackPanel>
+    <Button Grid.Column="1" Content="Cancelar búsqueda" local:ActionIcon.Data="{StaticResource CancelIcon}" Click="CancelScan" IsEnabled="{Binding CanCancel}" Padding="10,4" MinHeight="30"/>
+    <Button Grid.Column="2" Content="Ayuda" local:ActionIcon.Data="{StaticResource HelpIcon}" Click="ShowAbout" Padding="10,4" MinHeight="30" Margin="0"/>
+   </Grid>
+  </Border>
+  <Grid Margin="18,8,18,10">
+   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+   <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><Path Data="{StaticResource ComputerIcon}" Stroke="{DynamicResource Ink}" StrokeThickness="1.6" Width="19" Height="19" Stretch="Uniform" Margin="0,0,8,0"/><StackPanel><TextBlock Text="Equipo" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding Computer}" Foreground="{DynamicResource Ink}" FontWeight="SemiBold" FontSize="14"/></StackPanel></StackPanel>
+    <StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="Usuario" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding ConnectedUser}" Foreground="{DynamicResource Ink}" FontSize="14" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding ConnectedUser}"/></StackPanel>
+    <StackPanel Grid.Column="2" VerticalAlignment="Center"><TextBlock Text="Departamento" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding Department}" Foreground="{DynamicResource Ink}" FontSize="14"/></StackPanel>
+    <Button Grid.Column="3" x:Name="ThemeToggle" Content="Modo claro" local:ActionIcon.Data="{StaticResource ThemeIcon}" Click="ToggleTheme" Padding="12,6" MinWidth="144" MinHeight="34" Margin="10,0,0,0">
+     <Button.ContentTemplate><DataTemplate><TextBlock Text="{Binding}" Width="88" TextWrapping="NoWrap"/></DataTemplate></Button.ContentTemplate>
+    </Button>
+   </Grid>
+   <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel x:Name="WorkArea" IsEnabled="{Binding Available}" Margin="0,0,2,0">
+     <Border Style="{StaticResource Panel}" Padding="16,12" Margin="0,0,0,10">
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="90"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <Image Source="Assets/app-mark.png" Width="76" Height="76" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Icono WPS MINSEG"/>
+       <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,10,0">
+        <TextBlock Text="WPS Office" Foreground="{DynamicResource Ink}" FontFamily="{StaticResource TitleFont}" FontSize="32"/>
+        <TextBlock Text="{Binding WpsSummary}" Foreground="{DynamicResource Warning}" FontWeight="SemiBold" FontSize="15" Margin="0,3,0,4"/>
+        <TextBlock Text="Escanea el equipo y desinstala WPS." Foreground="{DynamicResource Subtle}" FontSize="14"/>
+       </StackPanel>
+       <Button Grid.Column="2" x:Name="ScanAction" Content="Escanear equipo" local:ActionIcon.Data="{StaticResource ScanIcon}" Background="#0069D9" Foreground="White" BorderBrush="#268BFF" Click="ScanFiles" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" VerticalAlignment="Center" MinHeight="52" Margin="8,0,10,0"/>
+       <Button Grid.Column="3" x:Name="WpsAction" Content="Desinstalar WPS" local:ActionIcon.Data="{StaticResource TrashIcon}" Background="#C9192E" Foreground="White" BorderBrush="#EC4559" Click="UninstallWps" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" VerticalAlignment="Center" MinHeight="52" Margin="0"/>
+      </Grid>
+     </Border>
+     <Border Style="{StaticResource Panel}" Padding="16,10" Margin="0,0,0,10">
+      <StackPanel>
+       <DockPanel Margin="0,0,0,6"><Button DockPanel.Dock="Right" Content="Guardar informe" local:ActionIcon.Data="{StaticResource SaveIcon}" Click="ExportReport" Padding="10,5" MinHeight="32" FontSize="13" Margin="0"/><TextBlock Text="Resultado del escaneo" Foreground="{DynamicResource Ink}" FontFamily="{StaticResource TitleFont}" FontSize="23" VerticalAlignment="Center"/></DockPanel>
+       <Grid Margin="0,2"><Grid.ColumnDefinitions><ColumnDefinition Width="230"/><ColumnDefinition/></Grid.ColumnDefinitions>
+        <TextBlock Text="Programa instalado" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <TextBlock Grid.Column="1" Text="{Binding WpsSummary}" Foreground="{DynamicResource Ink}" TextAlignment="Right" FontSize="15"/>
+       </Grid>
+       <Border Height="1" Background="{DynamicResource Edge}" Margin="0,5"/>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="200"/><ColumnDefinition/></Grid.ColumnDefinitions>
+        <TextBlock Text="Restos y persistencia" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <TextBlock Grid.Column="1" Text="{Binding WpsReviewSummary}" Foreground="{DynamicResource Warning}" TextAlignment="Right" FontSize="14"/>
+       </Grid>
+       <Border Height="1" Background="{DynamicResource Edge}" Margin="0,5"/>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="230"/><ColumnDefinition/></Grid.ColumnDefinitions>
+        <TextBlock Text="Documentos personales" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <TextBlock Grid.Column="1" Text="Se conservan" Foreground="{DynamicResource Office}" FontWeight="SemiBold" TextAlignment="Right" FontSize="15"/>
+       </Grid>
+       <TextBlock Text="{Binding RemovalResult}" Foreground="{DynamicResource Subtle}" FontSize="13" TextWrapping="Wrap" MaxHeight="70" Margin="0,9,0,0" ToolTip="{Binding RemovalResult}" AutomationProperties.LiveSetting="Polite"/>
+      </StackPanel>
+     </Border>
+     <Expander x:Name="AdvancedOptions" IsExpanded="False" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource Edge}" BorderThickness="1" Padding="12,8">
+      <Expander.Header><StackPanel Orientation="Horizontal"><Path Data="{StaticResource SettingsIcon}" Stroke="{DynamicResource Ink}" StrokeThickness="1.6" Width="20" Height="20" Stretch="Uniform" Margin="3,0,10,0"/><TextBlock Text="Opciones avanzadas" Foreground="{DynamicResource Ink}" FontWeight="SemiBold" FontSize="16"/></StackPanel></Expander.Header>
+      <StackPanel Margin="0,14,0,0">
+       <WrapPanel Margin="0,0,0,12"><Button Content="Actualizar detección" local:ActionIcon.Data="{StaticResource ScanIcon}" Click="QuickScan"/><Button Content="Abrir como administrador" local:ActionIcon.Data="{StaticResource ShieldIcon}" Click="OpenAdmin" IsEnabled="{Binding CanElevate}"/></WrapPanel>
+       <TextBlock Text="{Binding ScanNotice}" Foreground="{DynamicResource Subtle}" FontSize="13" Margin="0,0,0,12"/>
+       <Expander x:Name="FindingsExpander" Header="Ver restos y persistencia" Margin="0,0,0,14">
+        <StackPanel Margin="0,8,0,0">
+         <TextBox Text="{Binding PersistenceDetails,Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="150" VerticalScrollBarVisibility="Auto"/>
+         <DataGrid ItemsSource="{Binding WpsFindings}" IsReadOnly="True" Height="210" Margin="0,10,0,0"><DataGrid.Columns><DataGridTextColumn Header="Tipo" Binding="{Binding Kind}" Width="110"/><DataGridTextColumn Header="Estado" Binding="{Binding Trust}" Width="110"/><DataGridTextColumn Header="Ruta" Binding="{Binding Location}" Width="*"/></DataGrid.Columns></DataGrid>
+        </StackPanel>
+       </Expander>
+              <Border x:Name="OfficePanel" Style="{StaticResource Panel}" Padding="16,12" BorderBrush="{DynamicResource Office}"><StackPanel>
+        <StackPanel Orientation="Horizontal"><Path Data="{StaticResource OfficeIcon}" Stroke="{DynamicResource Office}" StrokeThickness="1.8" Width="27" Height="27" Stretch="Uniform" Margin="0,0,10,0"/><TextBlock Text="Microsoft Office" Foreground="{DynamicResource Office}" FontFamily="{StaticResource TitleFont}" FontSize="23"/></StackPanel>
+        <TextBlock Foreground="{DynamicResource Ink}" Text="{Binding OfficeSummary}" FontWeight="SemiBold" Margin="0,4"/>
+        <TextBlock Text="{Binding OfficeDetection}" Foreground="{DynamicResource Office}" Margin="0,0,0,4"/>
+        <TextBlock Text="{Binding OfficeDetail}" FontSize="13" Foreground="{DynamicResource Subtle}" Margin="0,0,0,10"/>
+        <TextBlock Text="{Binding OfficeFeedback}" TextWrapping="Wrap" Foreground="{DynamicResource Ink}" AutomationProperties.LiveSetting="Polite" Margin="0,0,0,8"/>
+        <TextBlock x:Name="OfficeWarningsLabel" Text="{Binding OfficeWarnings}" TextWrapping="Wrap" Foreground="{DynamicResource Subtle}" FontSize="13" Margin="0,0,0,8"/>
+        <WrapPanel><Button local:ActionIcon.Data="{StaticResource OfficeIcon}" Content="{Binding OfficeButton}" Click="OfficeDefaults" Background="{DynamicResource OfficeFill}" Foreground="#12251D"/><Button local:ActionIcon.Data="{StaticResource ScanIcon}" Content="Comprobar Office" Click="RefreshOffice"/><Button local:ActionIcon.Data="{StaticResource SaveIcon}" Content="Guardar XML para TI" Click="ExportOffice"/></WrapPanel>
+        <TextBlock Text="{Binding OfficeSteps}" TextWrapping="Wrap" Foreground="{DynamicResource Subtle}" FontSize="13" Margin="0,8,0,8"/>
+        <ItemsControl x:Name="OfficeAppsList" ItemsSource="{Binding OfficeApplications}">
+         <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+         <ItemsControl.ItemTemplate><DataTemplate>
+          <Border Background="{DynamicResource Raised}" BorderBrush="{DynamicResource Office}" BorderThickness="1,0,0,0" Padding="10" Margin="0,0,8,8" Width="246">
+           <StackPanel>
+            <TextBlock Text="{Binding Application}" Foreground="{DynamicResource Office}" FontSize="18" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding VersionSummary}" Foreground="{DynamicResource Subtle}" FontSize="13"/>
+            <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" Foreground="{DynamicResource Ink}" FontSize="13" Margin="0,4"/>
+            <TextBlock Text="{Binding PendingFormats}" TextWrapping="Wrap" Foreground="{DynamicResource Subtle}" FontSize="12" Margin="0,0,0,8"/>
+            <Button local:ActionIcon.Data="{StaticResource SettingsIcon}" Content="{Binding ButtonLabel}" Click="ConfigureOfficeApp" IsEnabled="{Binding CanVerify}" Margin="0">
+             <Button.Style><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Style.Triggers><DataTrigger Binding="{Binding DataContext.OfficeManual,RelativeSource={RelativeSource AncestorType=Window}}" Value="False"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Button.Style>
+            </Button>
+           </StackPanel>
+          </Border>
+         </DataTemplate></ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Expander x:Name="OfficeFormatsPanel" Header="Ver formatos y programa de apertura" Margin="0,4,0,8">
+         <DataGrid x:Name="OfficeFormatsGrid" ItemsSource="{Binding OfficeFormats}" IsReadOnly="True" Height="190" ColumnHeaderHeight="36" EnableRowVirtualization="False" EnableColumnVirtualization="False" Margin="0,8,0,0">
+          <DataGrid.Columns>
+           <DataGridTextColumn Header="Formato" Binding="{Binding Identifier}" Width="80"/>
+           <DataGridTextColumn Header="Office" Binding="{Binding Application}" Width="110"/>
+           <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="230"/>
+           <DataGridTextColumn Header="Abre con" Binding="{Binding OpeningTarget}" Width="*"/>
+          </DataGrid.Columns>
+         </DataGrid>
+        </Expander>
+        <Expander Header="Opciones de Office" Margin="0,8,0,0"><WrapPanel Margin="0,8,0,0"><Button local:ActionIcon.Data="{StaticResource SettingsIcon}" Content="Abrir predeterminados de Windows" Click="OpenDefaults"/><Button local:ActionIcon.Data="{StaticResource RestoreIcon}" Content="Desactivar política de Office" Click="RemoveOffice"/></WrapPanel></Expander>
+       </StackPanel></Border>
+
+       <Expander Header="Información del equipo" Margin="0,0,0,14"><StackPanel Margin="0,10">
+        <TextBlock Text="{Binding DeviceDetails}" Foreground="{DynamicResource Ink}"/>
+        <TextBlock Text="{Binding Ip,StringFormat=IP: {0}}" Foreground="{DynamicResource Ink}" Margin="0,6,0,0"/>
+        <TextBlock Text="{Binding Mac,StringFormat=MAC: {0}}" Foreground="{DynamicResource Ink}"/>
+        <TextBlock Text="Departamento" Foreground="{DynamicResource Ink}" Margin="0,10,0,4"/>
+        <TextBox Text="{Binding Department,UpdateSourceTrigger=PropertyChanged}" MaxLength="120" Width="360" HorizontalAlignment="Left"/>
+        <TextBlock Text="Escribe el departamento. No se obtiene a partir de la IP." FontSize="13" Foreground="{DynamicResource Subtle}" Margin="0,4,0,0"/>
+       </StackPanel></Expander>
+       <Expander x:Name="ReportExpander" Header="Informe y respaldos" Margin="0,0,0,10"><StackPanel Margin="0,10">
+        <TextBox Text="{Binding RemovalResult,Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="150" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10"/>
+        <DataGrid ItemsSource="{Binding Entries}" Height="220" IsReadOnly="True"><DataGrid.Columns><DataGridTextColumn Header="Acción" Binding="{Binding Action}" Width="160"/><DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="100"/><DataGridTextColumn Header="Detalle" Binding="{Binding Detail}" Width="*"/></DataGrid.Columns></DataGrid>
+        <WrapPanel Margin="0,10"><Button Content="Guardar informe" local:ActionIcon.Data="{StaticResource SaveIcon}" Click="ExportReport"/><Button Content="Ver respaldos" local:ActionIcon.Data="{StaticResource FolderIcon}" Click="OpenBackups"/></WrapPanel>
+       </StackPanel></Expander>
+       <TextBlock Text="{Binding BuildLabel}" Foreground="{DynamicResource Subtle}" FontSize="12" Margin="0,8"/>
+      </StackPanel>
+     </Expander>
+    </StackPanel>
+   </ScrollViewer>
+  </Grid>
+ </DockPanel>
+</Window>

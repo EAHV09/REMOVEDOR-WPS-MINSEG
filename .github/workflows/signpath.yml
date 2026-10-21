@@ -1,0 +1,178 @@
+name: Firma SignPath 3.1.0
+on:
+  workflow_dispatch:
+    inputs:
+      request_signing:
+        description: Solicitar firma (solo tras aceptación de SignPath)
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: minseg-signpath
+  cancel-in-progress: false
+defaults:
+  run:
+    shell: pwsh
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
+jobs:
+  validate:
+    if: github.repository == 'EAHV09/REMOVEDOR-WPS-MINSEG' && github.ref == 'refs/heads/main'
+    runs-on: windows-2022
+    timeout-minutes: 30
+    outputs:
+      helpers_id: ${{ steps.helpers.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          global-json-file: global.json
+      - name: Compilar y probar sin cambios en el equipo
+        run: ./scripts/Build-SignPathCandidate.ps1 -OutputDirectory "$env:RUNNER_TEMP/unsigned-validation"
+      - name: Preparar los dos ayudantes propios
+        run: |
+          New-Item -ItemType Directory -Path "$env:RUNNER_TEMP/helpers" | Out-Null
+          foreach ($name in @('AppLockerHost.ps1', 'BuildPolicy.ps1')) {
+            Copy-Item -LiteralPath "src/Minseg.Core/$name" -Destination "$env:RUNNER_TEMP/helpers/$name"
+          }
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        id: helpers
+        with:
+          name: unsigned-helpers
+          path: ${{ runner.temp }}/helpers/*.ps1
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: validation-evidence
+          path: ${{ runner.temp }}/unsigned-validation-evidence/*
+          if-no-files-found: error
+          retention-days: 14
+  sign:
+    needs: validate
+    if: >-
+      github.repository == 'EAHV09/REMOVEDOR-WPS-MINSEG' &&
+      inputs.request_signing &&
+      vars.SIGNPATH_ENABLED == 'true' &&
+      vars.SIGNPATH_REPOSITORY == github.repository &&
+      github.ref == 'refs/heads/main'
+    runs-on: windows-2022
+    timeout-minutes: 90
+    environment: signpath-release
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          global-json-file: global.json
+      - name: Comprobar configuración (sin imprimir secretos)
+        env:
+          ORGANIZATION: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          PROJECT: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          POLICY: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          HELPERS_CONFIG: ${{ vars.SIGNPATH_HELPERS_CONFIG }}
+          EXE_CONFIG: ${{ vars.SIGNPATH_EXE_CONFIG }}
+          CERTIFICATE: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+        run: |
+          foreach ($name in @('ORGANIZATION','PROJECT','POLICY','HELPERS_CONFIG','EXE_CONFIG','CERTIFICATE')) {
+            if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) { throw "Falta configurar $name." }
+          }
+          if ($env:CERTIFICATE -notmatch '^[a-fA-F0-9]{40}$') { throw 'Huella de certificado inválida.' }
+      - name: Solicitar firma de los ayudantes (aprobación manual en SignPath)
+        id: sign_helpers
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_HELPERS_CONFIG }}
+          github-artifact-id: ${{ needs.validate.outputs.helpers_id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: '1800'
+          output-artifact-directory: ${{ runner.temp }}/signed-helpers
+      - name: Verificar e incorporar los ayudantes sin cambiar sus bytes
+        env:
+          CERTIFICATE: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+        run: |
+          $files = @(Get-ChildItem -LiteralPath "$env:RUNNER_TEMP/signed-helpers" -File -Recurse)
+          if ($files.Count -ne 2) { throw 'SignPath no devolvió exactamente los dos ayudantes.' }
+          foreach ($name in @('AppLockerHost.ps1', 'BuildPolicy.ps1')) {
+            $path = "$env:RUNNER_TEMP/signed-helpers/$name"
+            ./scripts/Test-SignedFile.ps1 -Path $path -ExpectedThumbprint $env:CERTIFICATE
+            Copy-Item -LiteralPath $path -Destination "src/Minseg.Core/$name"
+          }
+      - name: Construir el EXE con los ayudantes firmados
+        id: candidate
+        env:
+          CERTIFICATE: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+        run: ./scripts/Build-SignPathCandidate.ps1 -OutputDirectory "$env:RUNNER_TEMP/unsigned-final" -RequireSignedHelpers -ExpectedThumbprint $env:CERTIFICATE
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        id: executable
+        with:
+          name: unsigned-executable
+          path: ${{ runner.temp }}/unsigned-final/MINSEG-Control.exe
+          if-no-files-found: error
+          retention-days: 14
+      - name: Solicitar firma del EXE (segunda aprobación manual en SignPath)
+        id: sign_exe
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_EXE_CONFIG }}
+          github-artifact-id: ${{ steps.executable.outputs.artifact-id }}
+          parameters: |
+            version: ${{ toJSON(steps.candidate.outputs.version) }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: '1800'
+          output-artifact-directory: ${{ runner.temp }}/signed-final
+      - name: Verificar firma final y guardar evidencia
+        env:
+          CERTIFICATE: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+          VERSION: ${{ steps.candidate.outputs.version }}
+          HELPERS_REQUEST_ID: ${{ steps.sign_helpers.outputs.signing-request-id }}
+          HELPERS_REQUEST_URL: ${{ steps.sign_helpers.outputs.signing-request-web-url }}
+          EXE_REQUEST_ID: ${{ steps.sign_exe.outputs.signing-request-id }}
+          EXE_REQUEST_URL: ${{ steps.sign_exe.outputs.signing-request-web-url }}
+        run: |
+          $files = @(Get-ChildItem -LiteralPath "$env:RUNNER_TEMP/signed-final" -File -Recurse)
+          if ($files.Count -ne 1) { throw 'La salida firmada no contiene exactamente un archivo.' }
+          $exe = "$env:RUNNER_TEMP/signed-final/MINSEG-Control.exe"
+          $info = [Diagnostics.FileVersionInfo]::GetVersionInfo($exe)
+          if ($info.ProductName -cne 'REMOVEDOR DEL WPS MINSEG' -or $info.ProductVersion -cne $env:VERSION) { throw 'Metadatos inesperados.' }
+          ./scripts/Test-SignedFile.ps1 -Path $exe -ExpectedThumbprint $env:CERTIFICATE |
+            ConvertTo-Json | Set-Content -LiteralPath "$env:RUNNER_TEMP/unsigned-final-evidence/signature.json" -Encoding utf8
+          $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash
+          "$hash  REMOVEDOR DEL WPS MINSEG.exe" | Set-Content -LiteralPath "$env:RUNNER_TEMP/unsigned-final-evidence/SHA256.txt" -Encoding ascii
+          New-Item -ItemType Directory -Path "$env:RUNNER_TEMP/signed-delivery" | Out-Null
+          Copy-Item -LiteralPath $exe -Destination "$env:RUNNER_TEMP/signed-delivery/REMOVEDOR DEL WPS MINSEG.exe"
+          [ordered]@{
+            Repository=$env:GITHUB_REPOSITORY; Commit=$env:GITHUB_SHA
+            RunId=$env:GITHUB_RUN_ID; RunAttempt=$env:GITHUB_RUN_ATTEMPT
+            HelpersRequestId=$env:HELPERS_REQUEST_ID; HelpersRequestUrl=$env:HELPERS_REQUEST_URL
+            ExeRequestId=$env:EXE_REQUEST_ID; ExeRequestUrl=$env:EXE_REQUEST_URL
+          } | ConvertTo-Json | Set-Content -LiteralPath "$env:RUNNER_TEMP/unsigned-final-evidence/signing-requests.json" -Encoding utf8
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: signed-candidate-for-pilot
+          path: ${{ runner.temp }}/signed-delivery/REMOVEDOR DEL WPS MINSEG.exe
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: signed-build-evidence
+          path: ${{ runner.temp }}/unsigned-final-evidence/*
+          if-no-files-found: error
+          retention-days: 14

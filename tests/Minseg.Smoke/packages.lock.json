@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0-windows7.0": {
+      "MINSEG-Control": {
+        "type": "Project",
+        "dependencies": {
+          "Minseg.Core": "[1.5.2, )"
+        }
+      },
+      "minseg.core": {
+        "type": "Project"
+      }
+    },
+    "net10.0-windows7.0/win-x64": {}
+  }
+}

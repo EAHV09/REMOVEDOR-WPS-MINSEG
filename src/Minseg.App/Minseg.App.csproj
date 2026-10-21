@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF>
+    <AssemblyName>MINSEG-Control</AssemblyName><RootNamespace>Minseg.App</RootNamespace>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>true</SelfContained>
+    <RuntimeFrameworkVersion>10.0.12</RuntimeFrameworkVersion>
+    <PublishSingleFile>true</PublishSingleFile><IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile><PublishTrimmed>false</PublishTrimmed>
+    <DebugType>none</DebugType><DebugSymbols>false</DebugSymbols><ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\Minseg.Core\Minseg.Core.csproj" /><Resource Include="Assets\*" /><EmbeddedResource Include="Licenses\*" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="..\..\docs\GUIA.md" LogicalName="Minseg.App.Help.Guia"/><EmbeddedResource Include="..\..\NOTICE" LogicalName="Minseg.App.Licenses.Avisos"/></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="..\..\docs\OFFICE-AUTOMATICO-TI.md" LogicalName="Minseg.App.Help.Office"/></ItemGroup>
+</Project>
