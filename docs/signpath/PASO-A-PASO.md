@@ -1,12 +1,12 @@
-# Firma gratuita de la versión 3.1.0
+# Firma gratuita de la versión 3.1.1
 
 ## 1. Preparar GitHub
 
 Repositorio exclusivo: https://github.com/EAHV09/REMOVEDOR-WPS-MINSEG
 
 1. Activa la autenticación de dos factores de tu cuenta GitHub.
-2. En **Actions**, ejecuta **Compilar candidato 3.1.0** en `main` y espera resultado correcto.
-3. Revisa el EXE de `unsigned-candidate-3.1.0` y las evidencias. Todavía no tiene firma.
+2. En **Actions**, ejecuta **Compilar candidato 3.1.1** en `main` y espera resultado correcto.
+3. Revisa el EXE de `unsigned-candidate-3.1.1` y las evidencias. Todavía no tiene firma.
 4. Publica una versión preliminar claramente marcada como **sin firma, solo pruebas**, enlazada al commit compilado. Las fuentes quedan públicas por separado.
 
 ## 2. Solicitar SignPath Foundation
@@ -46,18 +46,18 @@ Protege `main`: exige revisión para contribuciones externas, evita force-push y
 
 ## 5. Firmar
 
-1. En **Actions → Firma SignPath 3.1.0 → Run workflow**, selecciona `main` y marca solicitar firma.
+1. En **Actions → Firma SignPath 3.1.1 → Run workflow**, selecciona `main` y marca solicitar firma.
 2. Revisa/aprueba el despliegue del entorno si GitHub lo solicita.
 3. En SignPath, revisa y aprueba la primera solicitud: `AppLockerHost.ps1` y `BuildPolicy.ps1` propios del proyecto.
 4. El flujo verifica ambas firmas y construye el EXE con esos bytes.
-5. Revisa y aprueba la segunda solicitud: el EXE 3.1.0 generado por ese mismo flujo.
+5. Revisa y aprueba la segunda solicitud: el EXE 3.1.1 generado por ese mismo flujo.
 6. Descarga `signed-candidate-for-pilot` y `signed-build-evidence` solo si el flujo terminó correctamente. No publiques un artefacto de un flujo fallido.
 
 Las solicitudes esperan hasta 30 minutos cada una. Si caducan, revisa su estado en SignPath antes de reintentar. Nunca descargues como final un artefacto sin comprobar su firma.
 
 ## 6. Verificar y probar
 
-La evidencia debe indicar firma `Valid`, certificado autorizado, sello de tiempo y versión 3.1.0. El EXE firmado tendrá un SHA-256 distinto al candidato local sin firma. No cambies el contenido del EXE después de firmarlo; renombrar el archivo no cambia su contenido.
+La evidencia debe indicar firma `Valid`, certificado autorizado, sello de tiempo y versión 3.1.1. El EXE firmado tendrá un SHA-256 distinto al candidato local sin firma. No cambies el contenido del EXE después de firmarlo; renombrar el archivo no cambia su contenido.
 
 Prueba primero en una PC Windows 10 y otra Windows 11 con las protecciones activas. Respalda documentos, escanea, desinstala WPS, revisa pendientes y comprueba Office al siguiente inicio de sesión si corresponde. La firma no garantiza ausencia de bloqueos del dominio ni de detecciones del antivirus.
 

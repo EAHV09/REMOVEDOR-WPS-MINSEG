@@ -1,10 +1,12 @@
 # REMOVEDOR DEL WPS MINSEG
 
-Herramienta de Windows para desinstalar WPS Office, revisar su persistencia y limpiar restos comprobados conservando documentos. Versión del programa: **3.1.0**, edición centrada en WPS.
+Herramienta de Windows para desinstalar WPS Office, revisar su persistencia y limpiar restos comprobados conservando documentos. Versión del programa: **3.1.1**, edición centrada en WPS.
 
 **Estado: candidato de pruebas sin firma.** La aceptación de SignPath Foundation y la firma pública siguen pendientes. No desactives Smart App Control, el antivirus ni las políticas del equipo para ejecutarlo. No se promete eliminación total ni compatibilidad certificada con un antivirus.
 
 ![Interfaz con datos ficticios](docs/images/modo-negro.png)
+
+[Ver el modo claro](docs/images/modo-claro.png).
 
 ## Uso
 
@@ -21,10 +23,10 @@ Esta interfaz realiza acciones solo sobre WPS. El núcleo compartido contiene ta
 ## Descargas y documentación
 
 - [Versiones de prueba](https://github.com/EAHV09/REMOVEDOR-WPS-MINSEG/releases): comprobar siempre la etiqueta de firma y los avisos de cada entrega.
-- [Guía de uso](docs/GUIA.md) · [Cambios](docs/CAMBIOS-3.1.0.md) · [Pruebas locales de la versión](docs/PRUEBAS-3.1.0.md).
+- [Guía de uso](docs/GUIA.md) · [Cambios](docs/CAMBIOS-3.1.1.md) · [Pruebas locales de la versión](docs/PRUEBAS-3.1.1.md).
 - [Office automático para TI](docs/OFFICE-AUTOMATICO-TI.md) · [Seguridad](SECURITY.md) · [Privacidad](PRIVACY.md).
 - [Code signing policy](CODE_SIGNING.md) · [Firma con SignPath, paso a paso](docs/signpath/PASO-A-PASO.md).
-- [Comprobaciones de la preparación pública](docs/signpath/VALIDACION-3.1.0.md).
+- [Comprobaciones de la preparación pública inicial (3.1.0) inicial (3.1.1)](docs/signpath/VALIDACION-3.1.0.md).
 
 Las capturas usan datos ficticios. Los informes de las PC y las credenciales no pertenecen a este repositorio.
 
@@ -33,12 +35,12 @@ Las capturas usan datos ficticios. Los informes de las PC y las credenciales no 
 Windows x64, .NET SDK **10.0.401** y runtime de destino **10.0.12**, fijados por el proyecto. El EXE es autónomo e incluye sus recursos; el código fuente se distribuye por separado.
 
 ```powershell
-./scripts/Build-SignPathCandidate.ps1 -OutputDirectory ./dist/candidate-310
+./scripts/Build-SignPathCandidate.ps1 -OutputDirectory ./dist/candidate-311
 ```
 
 El script restaura dependencias bloqueadas, consulta vulnerabilidades, ejecuta las pruebas del núcleo y de la interfaz y publica un candidato. No ejecuta desinstalaciones ni prepara asociaciones del equipo. Falla si la consulta de vulnerabilidades no puede completarse o encuentra avisos altos/críticos.
 
-El flujo **Compilar candidato 3.1.0** de GitHub Actions produce el EXE sin firma y evidencia. **Firma SignPath 3.1.0** solo puede solicitar firmas tras su configuración y aprobación. Los binarios para SignPath se compilan en GitHub; no se sube un EXE local como si tuviera origen verificado.
+El flujo **Compilar candidato 3.1.1** de GitHub Actions produce el EXE sin firma y evidencia. **Firma SignPath 3.1.1** solo puede solicitar firmas tras su configuración y aprobación. Los binarios para SignPath se compilan en GitHub; no se sube un EXE local como si tuviera origen verificado.
 
 ## Licencias y mantenimiento
 
@@ -48,4 +50,4 @@ Mantenimiento: [@EAHV09](https://github.com/EAHV09). Este repositorio es indepen
 
 ## English summary
 
-Windows WPS Office removal utility with a black/light interface, evidence-based residual cleanup, document preservation, and Microsoft Office association preparation for compatible domain policies. This 3.1.0 candidate is unsigned and has not completed a real endpoint pilot. SignPath Foundation acceptance is pending. Source and build workflows are public; endpoint reports and personal data are not collected by this repository.
+Windows WPS Office removal utility with a black/light interface, evidence-based residual cleanup, document preservation, and Microsoft Office association preparation for compatible domain policies. This 3.1.1 candidate is unsigned and has not completed a real endpoint pilot. SignPath Foundation acceptance is pending. Source and build workflows are public; endpoint reports and personal data are not collected by this repository.

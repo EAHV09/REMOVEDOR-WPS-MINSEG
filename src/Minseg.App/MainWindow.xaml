@@ -1,17 +1,18 @@
 <Window x:Class="Minseg.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Minseg.App" Title="REMOVEDOR DEL WPS MINSEG" Style="{StaticResource AppWindow}" Icon="Assets/app.ico" Width="1120" Height="720" MinWidth="960" MinHeight="620" WindowStartupLocation="CenterScreen" Loaded="WindowLoaded" Closing="WindowClosing" UseLayoutRounding="True">
  <DockPanel>
-  <Border DockPanel.Dock="Top" Background="{DynamicResource Header}" Padding="22,8">
+  <Border DockPanel.Dock="Top" Background="{DynamicResource Header}" Padding="22,8" BorderBrush="#EE5267" BorderThickness="0,0,0,3">
    <Grid>
-    <Grid.RowDefinitions><RowDefinition Height="70"/><RowDefinition Height="28"/></Grid.RowDefinitions>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-     <Image Source="Assets/minseg-seal.png" Width="70" Height="70" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Escudo MINSEG Panamá"/>
-     <Image Source="Assets/minseg-wordmark.png" Width="235" Height="47" Margin="16,0,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="MINSEG punto gob punto pa"/>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="210"/><ColumnDefinition Width="*"/><ColumnDefinition Width="210"/></Grid.ColumnDefinitions>
+    <Image Source="Assets/minseg-seal.png" Width="124" Height="124" HorizontalAlignment="Left" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Escudo MINSEG Panamá"/>
+    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+     <Image Source="Assets/minseg-wordmark.png" Width="224" Height="38" Margin="0,0,0,10" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="MINSEG punto gob punto pa"/>
+     <TextBlock Text="REMOVEDOR DEL WPS MINSEG" Foreground="White" FontFamily="{StaticResource TitleFont}" FontSize="26" TextAlignment="Center"/>
+     <TextBlock Text="Desinstala WPS y revisa sus restos" Foreground="#FFF0F2" FontSize="14" TextAlignment="Center" Margin="0,4,0,0"/>
     </StackPanel>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-     <Image Source="Assets/cibercom.png" Width="68" Height="68" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Logo CIBERCOM"/>
-     <StackPanel VerticalAlignment="Center" Margin="12,0,0,0"><TextBlock Text="CIBERCOM" FontFamily="{StaticResource TitleFont}" FontSize="30" Foreground="White"/><TextBlock Text="MINSEG Panamá" Foreground="White" FontSize="14"/></StackPanel>
+    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+     <Image Source="Assets/cibercom.png" Width="78" Height="78" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Logo CIBERCOM"/>
+     <StackPanel VerticalAlignment="Center" Margin="10,0,0,0"><TextBlock Text="CIBERCOM" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="White"/><TextBlock Text="MINSEG Panamá" Foreground="#FFF0F2" FontSize="14"/></StackPanel>
     </StackPanel>
-    <TextBlock Grid.Row="1" Text="REMOVEDOR DEL WPS MINSEG" Foreground="White" FontFamily="{StaticResource TitleFont}" FontSize="24" HorizontalAlignment="Center"/>
    </Grid>
   </Border>
   <Border DockPanel.Dock="Bottom" Background="{DynamicResource Canvas}" Padding="18,6" BorderBrush="{DynamicResource Edge}" BorderThickness="0,1,0,0">
@@ -26,7 +27,7 @@
   </Border>
   <Grid Margin="18,8,18,10">
    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-   <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <Grid Margin="4,2,2,12"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><Path Data="{StaticResource ComputerIcon}" Stroke="{DynamicResource Ink}" StrokeThickness="1.6" Width="19" Height="19" Stretch="Uniform" Margin="0,0,8,0"/><StackPanel><TextBlock Text="Equipo" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding Computer}" Foreground="{DynamicResource Ink}" FontWeight="SemiBold" FontSize="14"/></StackPanel></StackPanel>
     <StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="Usuario" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding ConnectedUser}" Foreground="{DynamicResource Ink}" FontSize="14" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding ConnectedUser}"/></StackPanel>
     <StackPanel Grid.Column="2" VerticalAlignment="Center"><TextBlock Text="Departamento" FontSize="12" Foreground="{DynamicResource Subtle}"/><TextBlock Text="{Binding Department}" Foreground="{DynamicResource Ink}" FontSize="14"/></StackPanel>
@@ -36,33 +37,33 @@
    </Grid>
    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <StackPanel x:Name="WorkArea" IsEnabled="{Binding Available}" Margin="0,0,2,0">
-     <Border Style="{StaticResource Panel}" Padding="16,12" Margin="0,0,0,10">
+     <Border Style="{StaticResource Panel}" Padding="16,12" Margin="0,0,0,12" BorderBrush="{DynamicResource Wps}" BorderThickness="4,0,0,0">
       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="90"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-       <Image Source="Assets/app-mark.png" Width="76" Height="76" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Icono WPS MINSEG"/>
+       <Image Source="Assets/app-mark.png" Width="84" Height="84" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Icono WPS MINSEG"/>
        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,10,0">
         <TextBlock Text="WPS Office" Foreground="{DynamicResource Ink}" FontFamily="{StaticResource TitleFont}" FontSize="32"/>
         <TextBlock Text="{Binding WpsSummary}" Foreground="{DynamicResource Warning}" FontWeight="SemiBold" FontSize="15" Margin="0,3,0,4"/>
-        <TextBlock Text="Escanea el equipo y desinstala WPS." Foreground="{DynamicResource Subtle}" FontSize="14"/>
+        <TextBlock Text="Programa, restos y persistencia." Foreground="{DynamicResource Subtle}" FontSize="14"/>
        </StackPanel>
-       <Button Grid.Column="2" x:Name="ScanAction" Content="Escanear equipo" local:ActionIcon.Data="{StaticResource ScanIcon}" Background="#0069D9" Foreground="White" BorderBrush="#268BFF" Click="ScanFiles" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" VerticalAlignment="Center" MinHeight="52" Margin="8,0,10,0"/>
-       <Button Grid.Column="3" x:Name="WpsAction" Content="Desinstalar WPS" local:ActionIcon.Data="{StaticResource TrashIcon}" Background="#C9192E" Foreground="White" BorderBrush="#EC4559" Click="UninstallWps" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" VerticalAlignment="Center" MinHeight="52" Margin="0"/>
+       <Button Grid.Column="2" x:Name="ScanAction" Content="Escanear equipo" local:ActionIcon.Data="{StaticResource ScanIcon}" Background="{DynamicResource WpsFill}" Foreground="#071D24" BorderBrush="#22D3F5" Click="ScanFiles" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" MinHeight="52" Margin="8,0,10,0"/>
+       <Button Grid.Column="3" x:Name="WpsAction" Content="Desinstalar WPS" local:ActionIcon.Data="{StaticResource TrashIcon}" Background="#C91935" Foreground="White" BorderBrush="#F35068" Click="UninstallWps" IsEnabled="{Binding CanUseTools}" Padding="16,12" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" MinHeight="52" Margin="0"/>
       </Grid>
      </Border>
      <Border Style="{StaticResource Panel}" Padding="16,10" Margin="0,0,0,10">
       <StackPanel>
        <DockPanel Margin="0,0,0,6"><Button DockPanel.Dock="Right" Content="Guardar informe" local:ActionIcon.Data="{StaticResource SaveIcon}" Click="ExportReport" Padding="10,5" MinHeight="32" FontSize="13" Margin="0"/><TextBlock Text="Resultado del escaneo" Foreground="{DynamicResource Ink}" FontFamily="{StaticResource TitleFont}" FontSize="23" VerticalAlignment="Center"/></DockPanel>
        <Grid Margin="0,2"><Grid.ColumnDefinitions><ColumnDefinition Width="230"/><ColumnDefinition/></Grid.ColumnDefinitions>
-        <TextBlock Text="Programa instalado" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <StackPanel Orientation="Horizontal"><Path Data="{StaticResource ComputerIcon}" Stroke="{DynamicResource Subtle}" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock Text="Programa instalado" Foreground="{DynamicResource Ink}" FontSize="15"/></StackPanel>
         <TextBlock Grid.Column="1" Text="{Binding WpsSummary}" Foreground="{DynamicResource Ink}" TextAlignment="Right" FontSize="15"/>
        </Grid>
        <Border Height="1" Background="{DynamicResource Edge}" Margin="0,5"/>
        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="200"/><ColumnDefinition/></Grid.ColumnDefinitions>
-        <TextBlock Text="Restos y persistencia" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <StackPanel Orientation="Horizontal"><Path Data="{StaticResource ShieldIcon}" Stroke="{DynamicResource Subtle}" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock Text="Restos y persistencia" Foreground="{DynamicResource Ink}" FontSize="15"/></StackPanel>
         <TextBlock Grid.Column="1" Text="{Binding WpsReviewSummary}" Foreground="{DynamicResource Warning}" TextAlignment="Right" FontSize="14"/>
        </Grid>
        <Border Height="1" Background="{DynamicResource Edge}" Margin="0,5"/>
        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="230"/><ColumnDefinition/></Grid.ColumnDefinitions>
-        <TextBlock Text="Documentos personales" Foreground="{DynamicResource Ink}" FontSize="15"/>
+        <StackPanel Orientation="Horizontal"><Path Data="{StaticResource FolderIcon}" Stroke="{DynamicResource Office}" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock Text="Documentos personales" Foreground="{DynamicResource Ink}" FontSize="15"/></StackPanel>
         <TextBlock Grid.Column="1" Text="Se conservan" Foreground="{DynamicResource Office}" FontWeight="SemiBold" TextAlignment="Right" FontSize="15"/>
        </Grid>
        <TextBlock Text="{Binding RemovalResult}" Foreground="{DynamicResource Subtle}" FontSize="13" TextWrapping="Wrap" MaxHeight="70" Margin="0,9,0,0" ToolTip="{Binding RemovalResult}" AutomationProperties.LiveSetting="Polite"/>

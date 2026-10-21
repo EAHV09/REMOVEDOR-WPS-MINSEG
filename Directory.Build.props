@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <Deterministic>true</Deterministic>
-    <Version>3.1.0</Version>
+    <Version>3.1.1</Version>
     <Product>REMOVEDOR DEL WPS MINSEG</Product>
     <AssemblyTitle>REMOVEDOR DEL WPS MINSEG</AssemblyTitle>
     <Description>WPS MINSEG · Desinstalación y limpieza</Description>

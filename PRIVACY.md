@@ -1,6 +1,6 @@
 # Privacidad
 
-REMOVEDOR DEL WPS MINSEG muestra nombre del equipo, versión de Windows, usuario de sesión, cuenta operadora, direcciones IP/MAC y departamento indicado por el operador. Lee entradas de instalaciones y revisa archivos, servicios, tareas e inicios relacionados con WPS. La interfaz 3.1.0 limita sus acciones a WPS.
+REMOVEDOR DEL WPS MINSEG muestra nombre del equipo, versión de Windows, usuario de sesión, cuenta operadora, direcciones IP/MAC y departamento indicado por el operador. Lee entradas de instalaciones y revisa archivos, servicios, tareas e inicios relacionados con WPS. La interfaz 3.1.1 limita sus acciones a WPS.
 
 No hay cuenta en la nube, publicidad, analítica ni envío automático de inventarios. El informe JSON se exporta solo cuando el operador lo solicita. Los cambios generan registros y respaldos locales en `%LOCALAPPDATA%\MINSEG-Control` o `%ProgramData%\MINSEG-Control`, según los permisos. Pueden contener rutas y configuraciones sensibles; los permisos se limitan al usuario correspondiente, administradores y SYSTEM.
 

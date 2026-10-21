@@ -1,6 +1,6 @@
 # Code signing policy
 
-Project: **REMOVEDOR DEL WPS MINSEG**, version 3.1.0. Repository: [EAHV09/REMOVEDOR-WPS-MINSEG](https://github.com/EAHV09/REMOVEDOR-WPS-MINSEG).
+Project: **REMOVEDOR DEL WPS MINSEG**, version 3.1.1. Repository: [EAHV09/REMOVEDOR-WPS-MINSEG](https://github.com/EAHV09/REMOVEDOR-WPS-MINSEG).
 
 **Pending application/acceptance. No SignPath-signed release is currently available.** The program's Apache-2.0 license is separate from Authenticode signing. The planned certificate identity is SignPath Foundation, not an institutional MINSEG certificate. Eligibility and signing policy are decided by the Foundation.
 
@@ -25,7 +25,7 @@ All maintainers must enable MFA on GitHub and SignPath before signing. External 
 
 Only manual runs on this repository's main branch may request signing. Signing also requires the `signpath-release` environment and `SIGNPATH_ENABLED=true`. These are not substitutes for Foundation-side origin verification and manual approval. No automatic public release is made by the signing workflow.
 
-Third-party runtime binaries are not re-signed as project-owned code. The local unsigned 3.1.0 EXE is a test candidate, not the artifact to submit through the GitHub connector. Building in CI and applying signatures will produce a different file hash.
+Third-party runtime binaries are not re-signed as project-owned code. The local unsigned 3.1.1 EXE is a test candidate, not the artifact to submit through the GitHub connector. Building in CI and applying signatures will produce a different file hash.
 
 ## Proposed attribution after acceptance
 

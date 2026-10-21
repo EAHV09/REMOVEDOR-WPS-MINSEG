@@ -1,4 +1,4 @@
-# Componentes de la versión 3.1.0
+# Componentes de la versión 3.1.1
 
 | Componente | Licencia y tratamiento |
 |---|---|
@@ -14,6 +14,6 @@
 
 El mantenedor ha solicitado la publicación de este proyecto con sus recursos. Los derechos de marca se conservan en NOTICE; la admisión de estos recursos queda sujeta a la revisión de SignPath Foundation. No se afirma una licencia general para reutilizar los logos.
 
-El producto esperado es `REMOVEDOR DEL WPS MINSEG`, versión `3.1.0`. El ensamblado se llama `MINSEG-Control`. El núcleo compartido conserva componentes para otros productos, pero la interfaz y los argumentos aceptados de esta edición se limitan a WPS.
+El producto esperado es `REMOVEDOR DEL WPS MINSEG`, versión `3.1.1`. El ensamblado se llama `MINSEG-Control`. El núcleo compartido conserva componentes para otros productos, pero la interfaz y los argumentos aceptados de esta edición se limitan a WPS.
 
 El proceso exige dependencias bloqueadas, origen nuget.org y consulta de vulnerabilidades disponible. Un fallo de consulta no se interpreta como ausencia de vulnerabilidades.
